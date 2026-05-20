@@ -37,7 +37,7 @@ export default function WeatherWidget() {
   }, []);
 
   return (
-    <div className="hidden md:flex items-center gap-6 text-xs uppercase tracking-widest text-pearl/60 font-sans glass-panel px-4 py-2.5 rounded-full z-40">
+    <div className="flex items-center gap-3 md:gap-6 text-[10px] md:text-xs uppercase tracking-widest text-pearl/60 font-sans glass-panel px-3 py-2 md:px-4 md:py-2.5 rounded-full z-40">
       <div className="flex items-center gap-2">
         <Clock className="w-3.5 h-3.5 text-gold" />
         <span>Resort Time: <span className="text-pearl font-medium">{time || "12:00 PM"}</span></span>

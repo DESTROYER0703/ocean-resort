@@ -21,23 +21,16 @@ export default function Hero() {
       id="home" 
       className="relative h-screen w-full flex items-center justify-center overflow-hidden"
     >
-      {/* Background Video */}
+      {/* Background Image */}
       <motion.div 
         style={{ y: yBg }}
         className="absolute inset-0 w-full h-[120%] -z-20"
       >
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline
+        <img 
+          src="https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=2070&auto=format&fit=crop"
+          alt="Luxury Resort Background"
           className="absolute inset-0 w-full h-full object-cover scale-105"
-        >
-          <source 
-            src="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c02d040785790d21aa330da1d2906b3a&profile_id=139&oauth2_token_id=57447761" 
-            type="video/mp4" 
-          />
-        </video>
+        />
         {/* Cinematic dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/40 via-primary/60 to-primary-dark" />
       </motion.div>

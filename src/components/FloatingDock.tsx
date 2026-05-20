@@ -46,7 +46,7 @@ export default function FloatingDock() {
   return (
     <>
       {/* Floating Bottom Center Glass Dock */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-primary-dark/80 backdrop-blur-xl border border-glass-border px-6 py-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 flex w-[90vw] md:w-auto overflow-hidden sm:overflow-visible flex-col md:flex-row justify-center items-center gap-2 md:gap-4 bg-primary-dark/90 md:bg-primary-dark/80 backdrop-blur-xl border border-glass-border px-3 md:px-6 py-2 md:py-3 rounded-3xl md:rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         {/* Weather & Time */}
         <WeatherWidget />
 
