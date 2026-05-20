@@ -11,9 +11,27 @@ export default function FloatingDock() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // AI Concierge Chat States
+  const [messages, setMessages] = useState<Array<{ sender: "aura" | "guest"; text: string }>>([
+    {
+      sender: "aura",
+      text: "Welcome to Ocean Resort. I am Aura, your digital concierge. How may I assist your escape today? You can inquire about our private suites, dining options, or bespoke experiences.",
+    },
+  ]);
+  const [inputVal, setInputVal] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll chat to bottom
   useEffect(() => {
-    // Lazy load ambient ocean sounds
-    audioRef.current = new Audio("https://assets.mixkit.co/active_storage/sfx/2513/2513-84.wav");
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isTyping]);
+
+  useEffect(() => {
+    // Lazy load ambient ocean sounds - high quality 30s loop
+    audioRef.current = new Audio("https://www.soundjay.com/nature/sounds/ocean-wave-1.mp3");
     audioRef.current.loop = true;
 
     const handleScroll = () => {
@@ -41,6 +59,44 @@ export default function FloatingDock() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSendMessage = () => {
+    if (!inputVal.trim()) return;
+
+    const userMessage = inputVal.trim();
+    setMessages((prev) => [...prev, { sender: "guest", text: userMessage }]);
+    setInputVal("");
+    setIsTyping(true);
+
+    // Simulate smart AI response based on keywords
+    setTimeout(() => {
+      const lowerMsg = userMessage.toLowerCase();
+      let replyText = "";
+
+      if (lowerMsg.includes("suite") || lowerMsg.includes("room") || lowerMsg.includes("villa") || lowerMsg.includes("accommodation")) {
+        replyText = "Our private sanctuaries range from the exquisite Ocean View Suite (₹18,500/night) to the Beachfront Villa (₹32,000/night) and the grand Presidential Suite (₹55,000/night). Each features custom luxury furnishings and direct ocean vistas. You can book them in the Accommodations section.";
+      } else if (lowerMsg.includes("dine") || lowerMsg.includes("dining") || lowerMsg.includes("food") || lowerMsg.includes("restaurant") || lowerMsg.includes("chef") || lowerMsg.includes("eat")) {
+        replyText = "Our main dining pavilion offers custom organic menus prepared by our executive chefs, featuring fresh local seafood and curated Indian & international cuisine. Beachside dining under the stars is also available.";
+      } else if (lowerMsg.includes("where") || lowerMsg.includes("location") || lowerMsg.includes("map") || lowerMsg.includes("address") || lowerMsg.includes("fatehpur")) {
+        replyText = "Ocean Resort is located on the pristine sands of Fatehpur, Uttar Pradesh, India. We coordinate private helicopter transfers and luxury vehicle transits for our guests.";
+      } else if (lowerMsg.includes("contact") || lowerMsg.includes("phone") || lowerMsg.includes("email") || lowerMsg.includes("whatsapp")) {
+        replyText = "You can contact our 24/7 guest service team at +91 8573890894 or mail us directly at concierge@oceanresort.com.";
+      } else if (lowerMsg.includes("price") || lowerMsg.includes("cost") || lowerMsg.includes("rate") || lowerMsg.includes("night") || lowerMsg.includes("how much")) {
+        replyText = "Our suites start at ₹18,500 per night. Best rates are guaranteed when booking directly with our concierge. Check out our Booking section for specific date availability.";
+      } else if (lowerMsg.includes("pool") || lowerMsg.includes("swim") || lowerMsg.includes("infinity")) {
+        replyText = "We feature a heated coastal infinity pool with panoramic views of the water, and private pools in all Beachfront Villas.";
+      } else if (lowerMsg.includes("owner") || lowerMsg.includes("founder") || lowerMsg.includes("dev") || lowerMsg.includes("gupta")) {
+        replyText = "The resort was founded by Dev Gupta, a visionary dedicated to delivering the pinnacle of luxury, curation, and relaxation along the Fatehpur coastline.";
+      } else if (lowerMsg.includes("hello") || lowerMsg.includes("hi") || lowerMsg.includes("hey") || lowerMsg.includes("greetings")) {
+        replyText = "Greetings! I am Aura, your digital concierge. How may I elevate your stay or assist you with booking details today?";
+      } else {
+        replyText = "Thank you for reaching out. At Ocean Resort, we pride ourselves on catering to your every desire. I have shared your inquiry with our guest experience team, and a representative will respond shortly, or you can contact our booking line directly.";
+      }
+
+      setMessages((prev) => [...prev, { sender: "aura", text: replyText }]);
+      setIsTyping(false);
+    }, 1200);
   };
 
   return (
@@ -121,21 +177,46 @@ export default function FloatingDock() {
                   Close
                 </button>
               </div>
-              <div className="p-6 h-80 overflow-y-auto space-y-4 font-sans text-sm">
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-serif">A</div>
-                  <div className="bg-glass border border-glass-border p-3 rounded-r-xl rounded-bl-xl max-w-[80%] text-pearl/90">
-                    Welcome to Ocean Resort. I am Aura, your digital concierge. How may I assist your escape today? You can inquire about our private suites, dining options, or bespoke experiences.
+              <div className="p-6 h-80 overflow-y-auto space-y-4 font-sans text-sm scrollbar-thin">
+                {messages.map((msg, index) => (
+                  <div key={index} className={`flex gap-3 ${msg.sender === "guest" ? "flex-row-reverse" : ""}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-serif shrink-0 ${msg.sender === "guest" ? "bg-pearl/10 border border-pearl/20 text-pearl" : "bg-gold/10 border border-gold/30 text-gold"}`}>
+                      {msg.sender === "aura" ? "A" : "G"}
+                    </div>
+                    <div className={`p-3 max-w-[80%] text-pearl/90 border border-glass-border rounded-xl ${msg.sender === "guest" ? "bg-primary-dark/60 rounded-tr-none text-left" : "bg-glass rounded-tl-none"}`}>
+                      {msg.text}
+                    </div>
                   </div>
-                </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex gap-3">
+                    <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-serif shrink-0">A</div>
+                    <div className="bg-glass border border-glass-border p-3 rounded-r-xl rounded-bl-xl text-pearl/50 italic flex items-center gap-1.5">
+                      Aura is typing
+                      <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                )}
+                <div ref={chatEndRef} />
               </div>
               <div className="p-4 bg-primary-dark border-t border-glass-border flex gap-2">
                 <input 
                   type="text" 
+                  value={inputVal}
+                  onChange={(e) => setInputVal(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSendMessage();
+                  }}
                   placeholder="Ask Aura anything..." 
                   className="flex-grow bg-glass border border-glass-border rounded-full px-4 py-2.5 text-xs text-pearl placeholder-pearl/30 focus:outline-none focus:border-gold transition-colors"
                 />
-                <button className="bg-gold text-primary rounded-full px-4 py-2.5 text-xs uppercase tracking-widest font-semibold hover:bg-gold-light transition-colors">
+                <button 
+                  onClick={handleSendMessage}
+                  className="bg-gold text-primary rounded-full px-4 py-2.5 text-xs uppercase tracking-widest font-semibold hover:bg-gold-light transition-colors"
+                >
                   Send
                 </button>
               </div>

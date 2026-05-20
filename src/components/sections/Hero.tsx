@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Calendar } from "lucide-react";
 import { useRef } from "react";
+import GoldParticles from "@/components/GoldParticles";
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,6 +39,7 @@ export default function Hero() {
       {/* Floating Orbs for Ambient Glow */}
       <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
+      <GoldParticles />
 
       {/* Content */}
       <motion.div 
@@ -95,6 +97,32 @@ export default function Hero() {
           >
             Explore Resort
           </a>
+        </motion.div>
+
+        {/* Mobile Info Cards (hidden on lg) */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 6.0 }}
+          className="flex flex-col sm:flex-row gap-4 mt-8 lg:hidden w-full max-w-md"
+        >
+          <div className="flex-1 flex items-center justify-center gap-3 glass-panel p-3.5 rounded-lg text-left">
+            <div className="flex text-gold text-xs leading-none">★★★★★</div>
+            <div className="h-5 w-[1px] bg-glass-border" />
+            <div className="font-sans">
+              <p className="text-[9px] uppercase tracking-wider text-pearl/50">Rating</p>
+              <p className="text-[11px] font-semibold text-pearl">4.9★ (500+ Guests)</p>
+            </div>
+          </div>
+          
+          <div className="flex-1 flex items-center justify-center gap-3 glass-panel p-3.5 rounded-lg text-left">
+            <span className="text-xs">🛡️</span>
+            <div className="h-5 w-[1px] bg-glass-border" />
+            <div className="font-sans">
+              <p className="text-[9px] uppercase tracking-wider text-pearl/50">Official Site</p>
+              <p className="text-[11px] font-semibold text-pearl">Best Rate Guaranteed</p>
+            </div>
+          </div>
         </motion.div>
       </motion.div>
 

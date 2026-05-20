@@ -1,12 +1,18 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
+import { OrbitControls, MeshDistortMaterial, Float } from "@react-three/drei";
 import { motion } from "framer-motion";
 import * as THREE from "three";
 
-function LuxurySphere() {
+interface LuxurySphereProps {
+  color: string;
+  distort: number;
+  speed: number;
+}
+
+function LuxurySphere({ color, distort, speed }: LuxurySphereProps) {
   const meshRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -21,10 +27,10 @@ function LuxurySphere() {
       <mesh ref={meshRef}>
         <sphereGeometry args={[1.8, 64, 64]} />
         <MeshDistortMaterial
-          color="#C9A84C"
+          color={color}
           attach="material"
-          distort={0.4}
-          speed={1.5}
+          distort={distort}
+          speed={speed}
           roughness={0.1}
           metalness={0.9}
           clearcoat={1}
@@ -37,11 +43,18 @@ function LuxurySphere() {
 
 export default function InteractiveTour() {
   const [isClient, setIsClient] = useState(false);
+  
+  const themes = [
+    { name: "Sunset Gold", color: "#C9A84C", distort: 0.4, speed: 1.5 },
+    { name: "Ocean Sapphire", color: "#0A4E7A", distort: 0.65, speed: 2.5 },
+    { name: "Coastal Emerald", color: "#166B4B", distort: 0.3, speed: 1.0 },
+  ];
 
-  // Set isClient to true when component mounts on the client
-  useState(() => {
+  const [sphereTheme, setSphereTheme] = useState(themes[0]);
+
+  useEffect(() => {
     setIsClient(true);
-  });
+  }, []);
 
   return (
     <section 
@@ -59,9 +72,9 @@ export default function InteractiveTour() {
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[10, 10, 5]} intensity={1.5} color="#E8C97A" />
                 <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#0A1628" />
-                <pointLight position={[0, 0, 5]} intensity={1} color="#C9A84C" />
+                 <pointLight position={[0, 0, 5]} intensity={1} color={sphereTheme.color} />
                 
-                <LuxurySphere />
+                <LuxurySphere color={sphereTheme.color} distort={sphereTheme.distort} speed={sphereTheme.speed} />
                 
                 <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
               </Canvas>
@@ -107,10 +120,30 @@ export default function InteractiveTour() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-pearl/60 font-sans font-light tracking-wide leading-relaxed mb-8"
+              className="text-pearl/60 font-sans font-light tracking-wide leading-relaxed mb-6"
             >
               Just as this sculpture moves dynamically to your touch, our guest experience adapts fluidly to your desires. Every request, every moment, custom tailored.
             </motion.p>
+
+            {/* Theme Selector */}
+            <div className="mb-8 font-sans">
+              <span className="text-[10px] uppercase tracking-widest text-pearl/40 font-semibold mb-3 block">Sculpture Theme Customizer</span>
+              <div className="flex gap-3">
+                {themes.map((theme) => (
+                  <button
+                    key={theme.name}
+                    onClick={() => setSphereTheme(theme)}
+                    className={`px-4 py-2 border rounded-full text-[10px] uppercase tracking-widest font-semibold transition-all duration-300 ${
+                      sphereTheme.name === theme.name
+                        ? "bg-gold text-primary border-gold shadow-[0_0_15px_rgba(201,168,76,0.3)]"
+                        : "border-glass-border hover:border-gold/50 text-pearl/70 hover:text-pearl bg-glass"
+                    }`}
+                  >
+                    {theme.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <a 
               href="#booking"

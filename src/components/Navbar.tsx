@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Phone } from "lucide-react";
 
 export default function Navbar() {
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -46,12 +47,61 @@ export default function Navbar() {
         </button>
         
         {/* Mobile Menu Hamburger */}
-        <button className="lg:hidden flex flex-col gap-1.5 p-2 magnetic z-50">
-          <span className="w-6 h-[1px] bg-pearl"></span>
-          <span className="w-6 h-[1px] bg-pearl"></span>
-          <span className="w-6 h-[1px] bg-pearl"></span>
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden flex flex-col gap-1.5 p-2 magnetic z-50 focus:outline-none"
+        >
+          <motion.span 
+            animate={isMobileMenuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+            className="w-6 h-[1.5px] bg-pearl block origin-center"
+          ></motion.span>
+          <motion.span 
+            animate={isMobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+            className="w-6 h-[1.5px] bg-pearl block"
+          ></motion.span>
+          <motion.span 
+            animate={isMobileMenuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+            className="w-6 h-[1.5px] bg-pearl block origin-center"
+          ></motion.span>
         </button>
       </div>
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-primary-dark/95 backdrop-blur-2xl z-40 flex flex-col justify-center items-center gap-8 px-6 pt-20"
+          >
+            <nav className="flex flex-col items-center gap-6 text-lg tracking-widest uppercase font-medium text-pearl">
+              {["Home", "Accommodations", "Amenities", "Dining", "Gallery"].map((item) => (
+                <a 
+                  key={item} 
+                  href={`#${item.toLowerCase()}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="hover:text-gold transition-colors font-serif text-xl"
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+
+            <button 
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                const el = document.getElementById("booking");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="flex items-center gap-2 bg-gold text-primary px-8 py-3.5 rounded-full text-xs uppercase tracking-widest font-semibold hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(201,168,76,0.2)]"
+            >
+              <Phone size={14} /> Book Now
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

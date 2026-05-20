@@ -77,7 +77,7 @@ export default function DroneShowcase() {
               className="w-full max-w-5xl aspect-video rounded-lg overflow-hidden border border-glass-border shadow-2xl relative bg-black"
             >
               <iframe 
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+                src="https://www.youtube.com/embed/PjGc-wU_Z5Q?autoplay=1" 
                 title="Resort Drone Video Tour"
                 className="w-full h-full border-none"
                 allow="autoplay; encrypted-media"
