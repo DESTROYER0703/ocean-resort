@@ -63,14 +63,19 @@ export default function Hero() {
           <span className="italic text-gold-light">Meets the Ocean</span>
         </motion.h1>
 
-        <motion.p 
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, delay: 5.4 }}
-          className="text-sm md:text-lg text-pearl/80 font-sans tracking-wide max-w-2xl mb-12 font-light leading-relaxed"
+          className="flex flex-col items-center max-w-2xl mb-12 gap-4"
         >
-          Experience paradise beyond imagination at India's most exclusive beachfront escape. Where every sunset is curated just for you.
-        </motion.p>
+          <p className="text-sm md:text-lg text-pearl/90 font-serif tracking-wide font-light leading-relaxed italic">
+            "Experience paradise beyond imagination at Fatehpur's most exclusive beachfront escape. Where every sunset is curated just for you."
+          </p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-gold font-sans font-semibold">
+            — Dev Gupta, Founder of the Resort
+          </p>
+        </motion.div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
